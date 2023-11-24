@@ -4,6 +4,15 @@ from .models import Question, Choice
 from django.template import loader
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LogoutView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView
+from .forms import CreationForm
+
+from . import models
+
 
 
 class IndexView(generic.ListView):
@@ -37,3 +46,29 @@ def vote(request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+class BBLoginView(LoginView):
+    template_name = 'register/login.html'
+
+
+class BBLogoutView(LoginRequiredMixin, LogoutView):
+    template_name = 'register/logout.html'
+
+
+
+class SignUp(CreateView):
+    form_class = CreationForm
+    success_url = reverse_lazy('index')
+    template_name = 'register/reg.html'
+
+class DeleteProfile(DeleteView):
+    model = models.User
+    success_url = reverse_lazy('index')
+    template_name = 'register/delete.html'
+
+class UpdateProfile(UpdateView):
+    model = models.User
+    success_url = reverse_lazy('index')
+    template_name = 'register/profile_update.html'
+    fields = ['username','avatar']

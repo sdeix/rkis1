@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Удаление профиля</h1>
+
+  <p>Удалить свой аккаунт?</p>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete." />
+  </form>
+{% endblock %}

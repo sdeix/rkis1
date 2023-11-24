@@ -127,6 +127,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# AUTH_USER_MODEL = 'interior.User'
+AUTH_USER_MODEL = 'polls.User'
 LOGIN_REDIRECT_URL = 'index'
-# LOGIN_REDIRECT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'login'
