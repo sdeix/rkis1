@@ -1,6 +1,6 @@
 {% extends "base_generic.html" %}
 {%block content%}
-<form action="{% url 'polls:vote' question.id %}" method="post">
+<form action="{% url 'vote' question.id %}" method="post">
     {% csrf_token %}
     <fieldset>
         <legend>
@@ -11,6 +11,8 @@
         <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}">
         <label for="choice{{forloop.counter}}">{{choice.choice_text}}</label><br>
         {% endfor %}
+        {{question.voters}}
+        {{question.id}} dqwe
     </fieldset>
 <input type="submit" value="Vote">
 </form>
