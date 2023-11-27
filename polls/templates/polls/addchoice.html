@@ -1,0 +1,13 @@
+{% extends 'base_generic.html' %}
+{% block title %}Создать ответы{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <form action="." method="post" id="register_form">
+    {% csrf_token %}
+    {% for form in formset %}
+    {{ form.as_p }}
+    {% endfor %}
+    <p><input type="submit" value="Done"></p>
+    <input type="text" name="Qid" value="{{Qid}}" style="display:none;">
+  </form>
+{% endblock %}

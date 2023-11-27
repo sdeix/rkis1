@@ -11,11 +11,14 @@ class User(AbstractUser):
         pass
 
 class Question(models.Model):
+
     question_text = models.CharField(max_length=200)
     description = models.TextField("Описание вопроса")
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published',default=datetime.datetime.now())
     votes = models.IntegerField(default=0)
     pic = models.ImageField("картинка поста", upload_to="images/pics", null=True, blank=True)
+    num_of_questions = models.IntegerField(null=False, default=3)
+
 
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
@@ -25,9 +28,11 @@ class Question(models.Model):
 
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+
     def procent(self):
         return round(100 * self.votes / self.question.votes)
 

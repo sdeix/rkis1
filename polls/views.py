@@ -9,7 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
-from .forms import CreationForm
+from .forms import CreationForm, AddForm, AddFormchoice
+
+
 
 from . import models
 
@@ -86,3 +88,35 @@ class UpdateProfile(UpdateView):
     success_url = reverse_lazy('index')
     template_name = 'register/profile_update.html'
     fields = ['username','avatar']
+
+
+
+def addchoice(request):
+    formset = [AddFormchoice() for i in range(Question.object.filter(id=pk).num_of_questions)]
+    return render(request, 'polls/addchoice.html', {'formset': formset})
+
+def addquestion(request):
+    if request.method == 'POST':
+        if 'AddQuestionsBtn' in request.POST:
+            form = AddForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_Question = form.save(commit=False)
+                new_Question.pic = form.cleaned_data['img']
+                new_Question.save()
+                formset = [AddFormchoice() for i in range(new_Question.num_of_questions)]
+                return render(request, 'polls/addchoice.html', {'formset': formset, 'Qid': new_Question.id})
+        else:
+            for i in range(Question.objects.get(id=request.POST.get('Qid')).num_of_questions):
+                form = AddFormchoice({'choice_text':request.POST.getlist('choice_text')[i]})
+                if form.is_valid():
+                    print(request.POST)
+                    new_Choice = form.save(commit=False)
+                    new_Choice.question = Question.objects.get(id=request.POST.get('Qid'))
+                    new_Choice.save()
+
+            return HttpResponseRedirect(reverse('index'))
+
+    else:
+        form = AddForm()
+        return render(request, 'polls/addquestion.html', {'form': form})
+

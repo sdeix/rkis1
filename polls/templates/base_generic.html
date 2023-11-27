@@ -16,7 +16,7 @@
                     {% if user.is_authenticated%}
                     <h1>{{user.username}}</h1>
                     <li><a href="{%url 'index' %}">Главная страница</a></li>
-
+                    <li><a href="{%url 'add_question' %}">Добавить вопрос</a></li>
 
                     <li><a href="{% url 'logout' %}">Выйти</a></li>
                     <li><a href="{% url 'delete' user.id %}">Удалить профиль</a></li>
