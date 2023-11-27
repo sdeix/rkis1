@@ -12,8 +12,11 @@ class User(AbstractUser):
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
+    description = models.TextField("Описание вопроса")
     pub_date = models.DateTimeField('date published')
     votes = models.IntegerField(default=0)
+    pic = models.ImageField("картинка поста", upload_to="images/pics", null=True, blank=True)
+
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
