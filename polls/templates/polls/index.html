@@ -4,9 +4,18 @@
 {%block content%}
 {% if latest_question_list %}
 <ul>
-    {% for question in latest_question_list %}
-    <li><a href="{% url 'detail' question.id %}">{{question.question_text}}</a> </li>
-    {% endfor %}
+    {% if user.is_staff %}
+        {% for question in latest_question_list %}
+        <li><a href="{% url 'detail' question.id %}">{{question.question_text}} {{question.was_published_recently}}</a> </li>
+        {% endfor %}
+    {% else%}
+        {% for question in latest_question_list %}
+        {% if question.was_published_recently %}
+        <li><a href="{% url 'detail' question.id %}">{{question.question_text}} {{question.was_published_recently}}</a> </li>
+        {%endif%}
+        {% endfor %}
+    {%endif%}
+
 </ul>
     {% else %}
      <p>

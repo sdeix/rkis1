@@ -35,6 +35,7 @@ class ResultsView(generic.DetailView):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
         
@@ -44,12 +45,20 @@ def vote(request, question_id):
             'error_message': 'вы не сделали выбор'
         })
     else:
-        
-        selected_voters = question.voters_set.get()
-        selected_voters.add(request.user)
-        selected_voters.save()
+        try:
+            voter = models.Voters.objects.get(question=question,voter=request.user)
+            last_choise = models.Choice.objects.get(pk=voter.choise.id)
+            question.votes -= 1
+            last_choise.votes -= 1
+            last_choise.save()
+            voter.delete()
+        except:
+            pass
+        voter = models.Voters.objects.create(question=question,voter=request.user,choise=selected_choice)
+        question.votes += 1
         selected_choice.votes += 1
         selected_choice.save()
+        question.save()
         return HttpResponseRedirect(reverse('results', args=(question.id,)))
 
 
